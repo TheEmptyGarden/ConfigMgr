@@ -5,24 +5,24 @@
 try
 {
   Function Main
-	{
+  {
     # Function Started
     LogTraceMessage "*** Function Main Started ***"
     write-Verbose "*** Function Main Started ***"
 
     # Set Global Environment Variables (Inputs)
-		SetGlobalEnvVariables
+    SetGlobalEnvVariables
 
     # Import PS Modules
-		ImportPsModules
+    ImportPsModules
 
     # Create and add more funcitons
-
-		# Function Finished
-
-		LogTraceMessage "*** Function Main Finished ***"
+    
+    # Function Finished
+    
+    LogTraceMessage "*** Function Main Finished ***"
     Write-Verbose "*** Function Main Finished ***"
-	}
+  }
 
 	Function SetGlobalEnvVariables
 	{
