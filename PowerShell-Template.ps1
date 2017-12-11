@@ -19,29 +19,28 @@ try
     # Create and add more funcitons
     
     # Function Finished
-    
     LogTraceMessage "*** Function Main Finished ***"
     Write-Verbose "*** Function Main Finished ***"
   }
 
-	Function SetGlobalEnvVariables
-	{
+  Function SetGlobalEnvVariables
+  {
     # Function Started
     LogTraceMessage "*** Function SetGlobalEnvVariables Started ***"
     Write-Verbose "*** Function SetGlobalEnvVariables Started ***"
     # Base script variables.  No modification should be necessary
-
-		# Set variables with global scope
-		$script:TraceState = ''
-		LogTraceMessage "Variable TraceState set to $script:TraceState"
+    
+    # Set variables with global scope
+    $script:TraceState = ''
+    LogTraceMessage "Variable TraceState set to $script:TraceState"
     Write-Verbose "Variable TraceState set to $script:TraceState"
-
-		$script:ErrorMessage = ''
+    
+    $script:ErrorMessage = ''
     LogTraceMessage "Variable ErrorMessage set to $script:ErrorMessage"\
     Write-Verbose "Variable ErrorMessage set to $script:ErrorMessage"
 
     $script:ErrorState = 0
-		LogTraceMessage "Variable ErrorState set to $script:ErrorState"
+    LogTraceMessage "Variable ErrorState set to $script:ErrorState"
     Write-Verbose "Variable ErrorState set to $script:ErrorState"
 
     #Script variables.  Modify as necessary
@@ -50,11 +49,11 @@ try
     Write-Verbose "Variable LoggingPath set to $script:LoggingPath"
     
     # Add variables here
-
+    
     # Function Finished
-		LogTraceMessage "*** Function SetGlobalEnvVariables Finished ***"
+    LogTraceMessage "*** Function SetGlobalEnvVariables Finished ***"
     Write-Verbose "*** Function SetGlobalEnvVariables Finished ***"
-	}
+  }
 
 	Function ImportPsModules
 	{
