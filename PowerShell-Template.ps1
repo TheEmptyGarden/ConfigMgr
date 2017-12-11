@@ -54,49 +54,48 @@ try
     LogTraceMessage "*** Function SetGlobalEnvVariables Finished ***"
     Write-Verbose "*** Function SetGlobalEnvVariables Finished ***"
   }
-
-	Function ImportPsModules
-	{
+  
+  Function ImportPsModules
+  {
     # Function Started
     LogTraceMessage "*** Function ImportPsModules Started ***"
     Write-Verbose "*** Function ImportPsModules Started ***"
   
     # Function Finished
-		LogTraceMessage "*** Function ImportPsModules Finished ***"
+    LogTraceMessage "*** Function ImportPsModules Finished ***"
     Write-Verbose "*** Function ImportPsModules Finished ***"
-	}
-
- 	Function LogTraceMessage ($strMessage)
-	{
-		[array]$script:TraceMessage += (Get-Date).ToString() + ':  ' + $strMessage + '~~' 
   }
-
- 	# Script Started
-
-	LogTraceMessage "*** Script Started ***"
+  
+  Function LogTraceMessage ($strMessage)
+  {
+    [array]$script:TraceMessage += (Get-Date).ToString() + ':  ' + $strMessage + '~~' 
+  }
+  
+  # Script Started
+  LogTraceMessage "*** Script Started ***"
   Write-Verbose "*** Script Started ***"
-
-	#Main
+  
+  #Main
   Main
 }
 
 Catch
 {
   # Catch Started
-	LogTraceMessage "*** Catch Started ***"
+  LogTraceMessage "*** Catch Started ***"
   Write-Verbose "*** Catch Started ***"
-
+  
   # Log error messages
-	$script:ErrorMessage = $Error[0].Exception.ToString()
-	LogTraceMessage "Variable ErrorMessage set to $script:ErrorMessage"
+  $script:ErrorMessage = $Error[0].Exception.ToString()
+  LogTraceMessage "Variable ErrorMessage set to $script:ErrorMessage"
   Write-Verbose "Variable ErrorMessage set to $script:ErrorMessage"
-
+  
   $script:ErrorState = 3
-	LogTraceMessage "Variable ErrorState set to $script:ErrorState"
+  LogTraceMessage "Variable ErrorState set to $script:ErrorState"
   Write-Verbose "Variable ErrorState set to $script:ErrorState"
-
+  
   # Catch Finished
-	LogTraceMessage "*** Catch Finished ***"
+  LogTraceMessage "*** Catch Finished ***"
   Write-Verbose "*** Catch Finished ***"
 }
 
@@ -105,19 +104,19 @@ Finally
   # Finally Started
   LogTraceMessage "*** Finally Started ***"
   Write-Verbose "*** Finally Started ***" 
-
+  
   # Log Error State/Message
-	LogTraceMessage "Variable ErrorState = $script:ErrorState"
+  LogTraceMessage "Variable ErrorState = $script:ErrorState"
   Write-Verbose  "Variable ErrorState = $script:ErrorState"
-
-	# Finally Finished
-	LogTraceMessage "*** Finally Finished ***"
-	Write-Verbose "*** Finally Finished ***"
-
+  
+  # Finally Finished
+  LogTraceMessage "*** Finally Finished ***"
+  Write-Verbose "*** Finally Finished ***"
+  
   # Script Finished
-	LogTraceMessage "*** Name of script Finished ***"
+  LogTraceMessage "*** Name of script Finished ***"
   Write-Verbose "*** name of script finished Finished ***"
-
+  
   # Write to log file
   $script:TraceMessage | Out-File $script:LoggingPath
 }
