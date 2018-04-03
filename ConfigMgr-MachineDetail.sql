@@ -24,11 +24,6 @@ select distinct rSys.ResourceID
 				then 'UNKNOWN'
 			else rSys.build01
 		end as 'Windows_10_Release_Number'
-	, case
-			when W10BuildNumber.ubr0 is NULL and rSys.Operating_System_Name_and0 like 'Microsoft Windows NT Workstation 10.0%'
-				Then 'UNKNOWN'
-			else CONVERT(varchar(10),W10BuildNumber.UBR0)
-		end as  'Windows_10_Build_Number'
 	, OS.OSArchitecture0 as 'OperatingSystem_Architecture'
 	, CompSys.Manufacturer0 as 'System_Manufacturer'
 	, CompSys.Model0 as 'System_Model_Number'
@@ -117,14 +112,9 @@ left join
 	group by ResourceID
 	) OU
 	on rSys.ResourceID = ou.ResourceID
-left join v_GS_CurrentVersion0 W10BuildNumber
-	on rSys.ResourceID = W10BuildNumber.ResourceID
 		
 where 1 = 1
 	and rSys.Decommissioned0 <> 1
 	and PrimaryUser.RelationActive = 1
-	and rSys.Name0 = 'LTI-1WH2CH2'
-
-
 
 GO
