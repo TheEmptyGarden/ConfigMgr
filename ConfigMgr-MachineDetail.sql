@@ -50,33 +50,33 @@ select distinct rSys.ResourceID
 	, SUPScan.ErrorStatusID as 'WSUS_ErrorID'
 	, SUPScan.ErrorCode as 'WSUS_Error_Code'
 	, SUPScan.HexErrorCode as 'WSUS_Hex_Error_Code'
-from [dbo].[v_R_System] rSys
-left join [dbo].[vWorkstationStatus] HINV
+from CM_TP1.dbo.v_R_System rSys
+left join CM_TP1.dbo.vWorkstationStatus HINV
 	on rSys.ResourceID = HINV.ResourceID
-left join [dbo].[vSoftwareInventoryStatus] SINV
+left join CM_TP1.dbo.vSoftwareInventoryStatus SINV
 	on rSys.ResourceID = SINV.ResourceID
-left join [dbo].[v_UpdateScanStatus] UpdateScan
+left join CM_TP1.dbo.v_UpdateScanStatus UpdateScan
 	on rSys.ResourceID = UpdateScan.ResourceID
-left join v_GS_COMPUTER_SYSTEM CompSys
+left join CM_TP1.dbo.v_GS_COMPUTER_SYSTEM CompSys
 	on rSys.resourceid = CompSys.ResourceID
-left join v_GS_OPERATING_SYSTEM OS
+left join CM_TP1.dbo.v_GS_OPERATING_SYSTEM OS
 	on rSys.ResourceID = OS.ResourceID
-left join [dbo].[v_GS_PC_BIOS] BIOS
+left join CM_TP1.dbo.v_GS_PC_BIOS BIOS
 	on rSys.ResourceID = BIOS.ResourceID
-left join v_GS_PHYSICAL_MEMORY Mem
+left join CM_TP1.dbo.v_GS_PHYSICAL_MEMORY Mem
 	on rSys.ResourceID = Mem.ResourceID
-left join v_GS_PROCESSOR Processor
+left join CM_TP1.dbo.v_GS_PROCESSOR Processor
 	on rSys.ResourceID = Processor.ResourceID
 left join
 	(
 	Select ResourceID
 		, Size0
 		, FreeSpace0
-	from v_GS_LOGICAL_DISK 
+	from CM_TP1.dbo.v_GS_LOGICAL_DISK 
 	where DeviceID0 = 'C:'
 	) LogicalDisk
 	on rSys.ResourceID = LogicalDisk.ResourceID
-left join v_UserMachineRelationship PrimaryUser
+left join CM_TP1.dbo.v_UserMachineRelationship PrimaryUser
 	on rSys.ResourceID = PrimaryUser.MachineResourceID
 left join
 	(
@@ -84,16 +84,16 @@ left join
 		, SN.StateName
 		, uss.LastStatusMessageID&0x0000FFFF as 'ErrorStatusID'
 		,	isnull(uss.LastErrorCode,0) as 'ErrorCode'
-		,	dbo.fnConvertBinaryToHexString(convert(VARBINARY(8), isnull(uss.LastErrorCode,0))) as 'HexErrorCode'
-	from v_UpdateScanStatus uss
-	join v_R_System rsys 
+		,	CM_TP1.dbo.fnConvertBinaryToHexString(convert(VARBINARY(8), isnull(uss.LastErrorCode,0))) as 'HexErrorCode'
+	from CM_TP1.dbo.v_UpdateScanStatus uss
+	join CM_TP1.dbo.v_R_System rsys 
 		on rsys.ResourceID = uss.ResourceID 
 			and isnull(rsys.Obsolete0,0)<>1
-	join v_SoftwareUpdateSource sus 
+	join CM_TP1.dbo.v_SoftwareUpdateSource sus 
 		on uss.UpdateSource_ID = sus.UpdateSource_ID 
-	join v_RA_System_SMSAssignedSites sass 
+	join CM_TP1.dbo.v_RA_System_SMSAssignedSites sass 
 		on uss.ResourceID = sass.ResourceID
-	join v_StateNames sn 
+	join CM_TP1.dbo.v_StateNames sn 
 		on sn.TopicType = 501 
 			and sn.StateID = (
 				case when (isnull(uss.LastScanState, 0)=0 and Left(isnull(rsys.Client_Version0, '4.0'), 1)<'4') 
@@ -102,13 +102,13 @@ left join
 	where 1= 1
 	) SUPScan
 	on rSys.ResourceID = SUPScan.ResourceID  
-left JOIN dbo.v_GS_SYSTEM_CONSOLE_USAGE_MAXGROUP TopUser
+left JOIN CM_TP1.dbo.v_GS_SYSTEM_CONSOLE_USAGE_MAXGROUP TopUser
 	on rSys.ResourceID = TopUser.resourceID
 left join
 	(
 	select ResourceID
 		, max(system_ou_name0) as 'OU'
-	from v_RA_System_SystemOUName
+	from CM_TP1.dbo.v_RA_System_SystemOUName
 	group by ResourceID
 	) OU
 	on rSys.ResourceID = ou.ResourceID
