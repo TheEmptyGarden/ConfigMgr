@@ -51,10 +51,10 @@ select distinct rSys.ResourceID
 	, HINV.LastHardwareScan as 'SCCM_LastHWscan'
 	, SINV.LastSoftwareScan as 'SCCM_LastSWscan'
 	, Dateadd(hour,(datediff(hour,getutcdate(),getdate())),UpdateScan.lastscantime) as 'Last_WSUSscan'
-	, SUPScan.StateName 'WSUSscan_State'
-	, SUPScan.ErrorStatusID
-	, SUPScan.ErrorCode
-	, SUPScan.HexErrorCode
+	, SUPScan.StateName as 'WSUSscan_Result'
+	, SUPScan.ErrorStatusID as 'WSUS_ErrorID'
+	, SUPScan.ErrorCode as 'WSUS_Error_Code'
+	, SUPScan.HexErrorCode as 'WSUS_Hex_Error_Code'
 from [dbo].[v_R_System] rSys
 left join [dbo].[vWorkstationStatus] HINV
 	on rSys.ResourceID = HINV.ResourceID
