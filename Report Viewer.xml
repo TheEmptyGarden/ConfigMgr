@@ -1,0 +1,56 @@
+<SMS_Roles>
+  <SMS_Role CopiedFromID="SMS0002R" RoleName="Report Viewer" RoleDescription="">
+    <Operations>
+      <Operation GrantedOperations="268435456" ObjectTypeID="2" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="4" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="6" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="9" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="11" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="17" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="20" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="22" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="25" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="28" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="30" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="31" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="33" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="37" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="41" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="44" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="47" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="49" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="52" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="55" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="56" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="57" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="58" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="59" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="60" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="61" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="62" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="64" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="65" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="66" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="67" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="69" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="70" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="71" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="73" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="78" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="79" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="80" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="81" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="85" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="86" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="87" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="88" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="89" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="211" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="212" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="214" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="217" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="218" />
+      <Operation GrantedOperations="268435456" ObjectTypeID="220" />
+    </Operations>
+  </SMS_Role>
+</SMS_Roles>
