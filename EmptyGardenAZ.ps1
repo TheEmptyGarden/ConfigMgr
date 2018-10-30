@@ -18,8 +18,12 @@ $EmptyGardenAzureSubscriptionID = (Get-AzureRmSubscription -SubscriptionName Emp
   $RDPPort = "3389"
   $WinRMHTTPPort = "5985"
   $WinRMHTTPSPort = "5986"
+  $EmptyGardenDNS = "10.10.10.10"
   $NetworkSecurityGroupName = "EmptyGardenNSG"
   $KeyVaultName = "EmptyGardenKeyVault"
+  $DomainName = "EmptyGarden.info"
+  $EmptyGardenRootCA = "EmptyGardenRootCA"
+
 
 #VM Image Variables
   $VMImagePublisherServer = "MicrosoftWindowsServer"  
@@ -39,8 +43,7 @@ $EmptyGardenAzureSubscriptionID = (Get-AzureRmSubscription -SubscriptionName Emp
   $VMSizeWorkstationSmall = "Standard_B1ms"
 
 #VM Global variables
-  $EmptyGardenAdminUser = "EmptyGardenAdmin"
-  $EmptyGardenAdminPassword = '0dMPV$$5kuRRsmMLAit@M0K'
+  $EmptyGardenAdminUser = Get-Credential -UserName "EmptyGardenAdmin" -Message "Enter password for EmptyGardenAdmin account"
   $VMTimeZone = "Central Standard Time"
 
 #TEE-DC-AZ variables
@@ -50,6 +53,7 @@ $EmptyGardenAzureSubscriptionID = (Get-AzureRmSubscription -SubscriptionName Emp
   $TEEDCAZIP = "10.10.10.10"
   $TEEDCAZName = "TEE-DC-AZ"
   $TEEDCAZDisk = "TEEDCAZOSDisk"
+  $TEEDCAZDiskSize = "128"
 
 #VM Auto Shutdown Variables
 $ScheduledShutdownPropertiesTEEDCAZ = @{}
@@ -66,6 +70,7 @@ $ScheduledShutdownPropertiesTEEDCAZ.Add('notificationSettings', @{status='Disabl
   $TEESQLAZIP = "10.10.10.20"
   $TEESQLAZName = "TEE-SQL-AZ"
   $TEESQLAZDisk = "TEESQLAZOSDisk"
+  $TEESQLAZDiskSize = "128"
 
 #TEE-SQL-AZ VM Auto Shutdown Variables
   $ScheduledShutdownPropertiesTEESQLAZ = @{}
@@ -82,6 +87,7 @@ $ScheduledShutdownPropertiesTEEDCAZ.Add('notificationSettings', @{status='Disabl
   $TEECMAZIP = "10.10.10.30"
   $TEECMAZName = "TEE-CM-AZ"
   $TEECMAZDisk = "TEECMAZOSDisk"
+  $TEECMAZDiskSize = "128"
 
 #TEE-CM-AZ VM Auto Shutdown Variables
   $ScheduledShutdownPropertiesTEECMAZ = @{}
@@ -152,12 +158,16 @@ $nsgRuleHTTPS = New-AzureRmNetworkSecurityRuleConfig -Name $NetworkSecurityGroup
 # Create a network security group
 $nsg = New-AzureRmNetworkSecurityGroup -ResourceGroupName $resourceGroup.ResourceGroupName -Location $location -Name $NetworkSecurityGroupName -SecurityRules $nsgRuleRDP, $nsgRuleHTTP, $nsgRuleHTTPS
 
+# Associate with subnet
+Set-AzureRmVirtualNetworkSubnetConfig -Name $SubnetName -VirtualNetwork $VirtualNetwork -NetworkSecurityGroup $NSG -AddressPrefix $SubnetAddressSpace
+$VirtualNetwork | Set-AzureRmVirtualNetwork
+
 # Create a key vault
 $KeyVault = New-AzureRmKeyVault -Name $KeyVaultName -ResourceGroupName $resourceGroup.ResourceGroupName -Location $Location
 
 # Create secret for EmtpyGardenAdmin
-$Secret = ConvertTo-SecureString -String $EmptyGardenAdminPassword -AsPlainText -Force
-$KeyVaultEmptyGardenAdminSecret = Set-AzureKeyVaultSecret -VaultName $KeyVault.VaultName -Name $EmptyGardenAdminUser -SecretValue $Secret
+$Secret = ConvertTo-SecureString -String $EmptyGardenAdminUser.Password -AsPlainText -Force
+$KeyVaultEmptyGardenAdminSecret = Set-AzureKeyVaultSecret -VaultName $KeyVault.VaultName -Name $EmptyGardenAdminUser.UserName -SecretValue $Secret
 
 # Create TEE-DC-AZ
 
@@ -169,7 +179,7 @@ $KeyVaultEmptyGardenAdminSecret = Set-AzureKeyVaultSecret -VaultName $KeyVault.V
 
   # Create a virtual network card and associate with public IP address and NSG
   $IPConfig = New-AzureRmNetworkInterfaceIpConfig -Name $TEEDCAZIPName -PrivateIpAddressVersion IPv4 -PrivateIpAddress $TEEDCAZIP -SubnetId $VirtualNetwork.subnets.id -PublicIpAddressId $PublicAddress.Id
-  $nic = New-AzureRmNetworkInterface -Name $TEEDCAZNICName -ResourceGroupName $resourceGroup.ResourceGroupName -Location $location -IpConfiguration $IPConfig -DnsServer "10.10.10.10" -NetworkSecurityGroup $nsg
+  $nic = New-AzureRmNetworkInterface -Name $TEEDCAZNICName -ResourceGroupName $resourceGroup.ResourceGroupName -Location $location -IpConfiguration $IPConfig -DnsServer $EmptyGardenDNS
 
   # Create a virtual machine configuration
   $VirtualMachineConfig = New-AzureRmVMConfig -VMName $TEEDCAZName -VMSize $VMSizeServerSmall
@@ -192,7 +202,7 @@ $KeyVaultEmptyGardenAdminSecret = Set-AzureKeyVaultSecret -VaultName $KeyVault.V
   $VirtualMachineBootDiag = Set-AzureRmVMBootDiagnostics -Enable -ResourceGroupName $ResourceGroup.ResourceGroupName -VM $VirtualMachineConfig -StorageAccountName $StorageAccountDiag.StorageAccountName
 
   #Set the disk size and type
-  $VirtaulMachineDisk = Set-AzureRmVMOSDisk -Name ($TEEDCAZDisk.tolower() + '.vhd') -vm $VirtualMachineConfig -StorageAccountType $StorageAccountVHDSKU -DiskSizeInGB 128 -Caching ReadWrite -Windows -CreateOption fromimage
+  $VirtaulMachineDisk = Set-AzureRmVMOSDisk -Name ($TEEDCAZDisk.tolower() + '.vhd') -vm $VirtualMachineConfig -StorageAccountType $StorageAccountVHDSKU -DiskSizeInGB $TEEDCAZDiskSize -Caching ReadWrite -Windows -CreateOption fromimage
 
   # Create TEE-DC-AZ
   $TEEDCAZAzureVM = New-AzureRmVM -ResourceGroupName $ResourceGroup.ResourceGroupName -Location $location -VM $VirtualMachineConfig
@@ -212,7 +222,7 @@ $KeyVaultEmptyGardenAdminSecret = Set-AzureKeyVaultSecret -VaultName $KeyVault.V
 
   # Create a virtual network card and associate with public IP address and NSG
   $IPConfig = New-AzureRmNetworkInterfaceIpConfig -Name $TEESQLAZIPName -PrivateIpAddressVersion IPv4 -PrivateIpAddress $TEESQLAZIP -SubnetId $VirtualNetwork.subnets.id -PublicIpAddressId $PublicAddress.Id
-  $nic = New-AzureRmNetworkInterface -Name $TEESQLAZNICName -ResourceGroupName $resourceGroup.ResourceGroupName -Location $location -IpConfiguration $IPConfig -DnsServer "10.10.10.10"
+  $nic = New-AzureRmNetworkInterface -Name $TEESQLAZNICName -ResourceGroupName $resourceGroup.ResourceGroupName -Location $location -IpConfiguration $IPConfig -DnsServer $EmptyGardenDNS
 
   # Create a virtual machine configuration
   $VirtualMachineConfig = New-AzureRmVMConfig -VMName $TEESQLAZName -VMSize $VMSizeServerLarge
@@ -235,7 +245,7 @@ $KeyVaultEmptyGardenAdminSecret = Set-AzureKeyVaultSecret -VaultName $KeyVault.V
   $VirtualMachineBootDiag = Set-AzureRmVMBootDiagnostics -Enable -ResourceGroupName $ResourceGroup.ResourceGroupName -VM $VirtualMachineConfig -StorageAccountName $StorageAccountDiag.StorageAccountName
 
   #Set the disk size and type
-  $VirtaulMachineDisk = Set-AzureRmVMOSDisk -Name ($TEESQLAZDisk.tolower() + '.vhd') -vm $VirtualMachineConfig -StorageAccountType $StorageAccountVHDSKU -DiskSizeInGB 128 -Caching ReadWrite -Windows -CreateOption fromimage
+  $VirtaulMachineDisk = Set-AzureRmVMOSDisk -Name ($TEESQLAZDisk.tolower() + '.vhd') -vm $VirtualMachineConfig -StorageAccountType $StorageAccountVHDSKU -DiskSizeInGB $TEESQLAZDiskSize -Caching ReadWrite -Windows -CreateOption fromimage
 
   # Create TEE-SQL-AZ virtual machine
   New-AzureRmVM -ResourceGroupName $ResourceGroup.ResourceGroupName -Location $location -VM $VirtualMachineConfig
@@ -256,7 +266,7 @@ $KeyVaultEmptyGardenAdminSecret = Set-AzureKeyVaultSecret -VaultName $KeyVault.V
 
   # Create a virtual network card and associate with public IP address and NSG
   $IPConfig = New-AzureRmNetworkInterfaceIpConfig -Name $TEECMAZIPName -PrivateIpAddressVersion IPv4 -PrivateIpAddress $TEECMAZIP -SubnetId $VirtualNetwork.subnets.id -PublicIpAddressId $PublicAddress.Id
-  $nic = New-AzureRmNetworkInterface -Name $TEECMAZNICName -ResourceGroupName $resourceGroup.ResourceGroupName -Location $location -IpConfiguration $IPConfig -DnsServer "10.10.10.10"
+  $nic = New-AzureRmNetworkInterface -Name $TEECMAZNICName -ResourceGroupName $resourceGroup.ResourceGroupName -Location $location -IpConfiguration $IPConfig -DnsServer $EmptyGardenDNS
 
   # Create a virtual machine configuration
   $VirtualMachineConfig = New-AzureRmVMConfig -VMName $TEECMAZName -VMSize $VMSizeServerLarge
@@ -279,7 +289,7 @@ $KeyVaultEmptyGardenAdminSecret = Set-AzureKeyVaultSecret -VaultName $KeyVault.V
   $VirtualMachineBootDiag = Set-AzureRmVMBootDiagnostics -Enable -ResourceGroupName $ResourceGroup.ResourceGroupName -VM $VirtualMachineConfig -StorageAccountName $StorageAccountDiag.StorageAccountName
 
   #Set the disk size and type
-  $VirtaulMachineDisk = Set-AzureRmVMOSDisk -Name ($TEECMAZDisk.tolower() + '.vhd') -vm $VirtualMachineConfig -StorageAccountType $StorageAccountVHDSKU -DiskSizeInGB 128 -Caching ReadWrite -Windows -CreateOption fromimage
+  $VirtaulMachineDisk = Set-AzureRmVMOSDisk -Name ($TEECMAZDisk.tolower() + '.vhd') -vm $VirtualMachineConfig -StorageAccountType $StorageAccountVHDSKU -DiskSizeInGB $TEECMAZDiskSize -Caching ReadWrite -Windows -CreateOption fromimage
 
   # Create TEE-CM-AZ virtual machine
   New-AzureRmVM -ResourceGroupName $ResourceGroup.ResourceGroupName -Location $location -VM $VirtualMachineConfig
@@ -291,8 +301,54 @@ $KeyVaultEmptyGardenAdminSecret = Set-AzureKeyVaultSecret -VaultName $KeyVault.V
   New-AzureRmResource -Location eastus -ResourceId $ScheduledShutdownResourceId  -Properties $ScheduledShutdownPropertiesTEECMAZ  -Force
 
 # Create EmptyGarden.info Domain
+$KeyVaultEmptyGardenAdminSecret = Get-AzureKeyVaultSecret -VaultName $KeyVaultName -Name $EmptyGardenAdminUser.UserName
 $AdminUserName = $TEEDCAZName + '\' + $KeyVaultEmptyGardenAdminSecret.Name
 $AdminPassword = ConvertTo-SecureString $KeyVaultEmptyGardenAdminSecret.SecretValueText -AsPlainText -Force
 $Cred =  New-Object System.Management.Automation.PSCredential ($AdminUserName, $AdminPassword)
 
-Enter-PSSession -ComputerName $TEEDCAZFQDN -cred $Cred
+$TEEDCAZFQDN = (Get-AzureRmPublicIpAddress -Name $TEEDCAZPublicAddressName -ResourceGroupName $ResourceGroupName).DnsSettings.Fqdn
+$TEEDCAZSession = New-PSSession -ComputerName $TEEDCAZFQDN -cred $Cred
+
+Invoke-Command -Session $TEEDCAZSession -ScriptBlock {Install-WindowsFeature AD-Domain-Services -IncludeManagementTools}
+Invoke-Command -Session $TEEDCAZSession -ScriptBlock {Install-ADDSForest -DomainName $Using:DomainName -SafeModeAdministratorPassword $Using:AdminPassword -InstallDns -Force}
+
+# Create PKI
+$KeyVaultEmptyGardenAdminSecret = Get-AzureKeyVaultSecret -VaultName $KeyVaultName -Name $EmptyGardenAdminUser.UserName
+$AdminUserName = $DomainName + '\' + $KeyVaultEmptyGardenAdminSecret.Name
+$AdminPassword = ConvertTo-SecureString $KeyVaultEmptyGardenAdminSecret.SecretValueText -AsPlainText -Force
+$Cred =  New-Object System.Management.Automation.PSCredential ($AdminUserName, $AdminPassword)
+
+$TEEDCAZSession = New-PSSession -ComputerName $TEEDCAZFQDN -cred $Cred
+
+Invoke-Command -Session $TEEDCAZSession -ScriptBlock {Add-WindowsFeature ADCS-Cert-Authority -IncludeManagementTools}
+Invoke-Command -Session $TEEDCAZSession -ScriptBlock {Install-WindowsFeature Web-WebServer -IncludeManagementTools}
+Invoke-Command -Session $TEEDCAZSession -ScriptBlock {Add-WindowsFeature ADCS-web-enrollment}
+Invoke-Command -Session $TEEDCAZSession -ScriptBlock {New-Item -ItemType Directory -Path C:\CertEnroll}
+Invoke-Command -Session $TEEDCAZSession -ScriptBlock {New-smbshare -name CertEnroll C:\CertEnroll -FullAccess SYSTEM,"$Using:DomainName\Domain Admins" -ChangeAccess "$Using:DomainName\Cert Publishers"}
+Invoke-Command -Session $TEEDCAZSession -ScriptBlock {Install-ADcsCertificationAuthority -CACommonName $Using:EmptyGardenRootCA -CAType EnterpriseRootCA -CryptoProviderName "RSA#Microsoft Software Key Storage Provider" -HashAlgorithmName SHA256 -KeyLength 2048 -ValidityPeriod Years -ValidityPeriodUnits 20 -force}
+Invoke-Command -Session $TEEDCAZSession -ScriptBlock {certutil -setreg CA\CRLPublicationURLs "1:C:\Windows\system32\CertSrv\CertEnroll\%3%8%9.crl \n10:ldap:///CN=%7%8,CN=%2,CN=CDP,CN=Public Key Services,CN=Services,%6%10\n2:http://crt.rebeladmin.com/CertEnroll/%3%8%9.crl"}
+Invoke-Command -Session $TEEDCAZSession -ScriptBlock {certutil -setreg CA\CACertPublicationURLs "1:C:\Windows\system32\CertSrv\CertEnroll\%1_%3%4.crt\n2:ldap:///CN=%7,CN=AIA,CN=Public Key Services,CN=Services,%6%11\n2:http://crt.rebeladmin.com/CertEnroll/%1_%3%4.crt"}
+Invoke-Command -Session $TEEDCAZSession -ScriptBlock {certutil -setreg ca\ValidityPeriod "Years"}
+Invoke-Command -Session $TEEDCAZSession -ScriptBlock {certutil -setreg ca\ValidityPeriodUnits 20}
+Invoke-Command -Session $TEEDCAZSession -ScriptBlock {Certutil -setreg CA\CRLPeriodUnits 13}
+Invoke-Command -Session $TEEDCAZSession -ScriptBlock {Certutil -setreg CA\CRLPeriod "Weeks"}
+Invoke-Command -Session $TEEDCAZSession -ScriptBlock {Certutil -setreg CA\CRLDeltaPeriodUnits 0}
+Invoke-Command -Session $TEEDCAZSession -ScriptBlock {Certutil -setreg CA\CRLOverlapPeriodUnits 6}
+Invoke-Command -Session $TEEDCAZSession -ScriptBlock {Certutil -setreg CA\CRLOverlapPeriod "Hours"}
+Invoke-Command -Session $TEEDCAZSession -ScriptBlock {Restart-Service certsvc}
+Invoke-Command -Session $TEEDCAZSession -ScriptBlock {certutil -crl}
+Invoke-Command -Session $TEEDCAZSession -ScriptBlock {Install-ADCSwebenrollment -force}
+
+#Create and deploy cert????? Not sure if this is possible with powershell.  which is stupid.
+
+#Create domain objects (OU's, users, MSA's)
+
+#Install SQL
+
+#Install SCCM
+
+#Create SQL indexing jobs
+
+#Create SCCM / SQL Backup jobs
+
+#Configure SCCM???  Boundaries, 
