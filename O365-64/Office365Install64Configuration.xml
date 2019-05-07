@@ -2,7 +2,9 @@
   <Add OfficeClientEdition="64" Channel="Monthly" OfficeMgmtCOM="TRUE" ForceUpgrade="TRUE"> 
     <Product ID="O365ProPlusRetail"> 
       <Language ID="en-us" /> 
-      <ExcludeApp ID="Groove" />
+        <ExcludeApp ID="Groove" />
+        <ExcludeApp ID="Lync" />
+        <ExcludeApp ID="OneNote" />
     </Product> 
   </Add> 
   <Property Name="SharedComputerLicensing" Value="0" /> 
