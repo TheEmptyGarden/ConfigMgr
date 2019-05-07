@@ -1,0 +1,10 @@
+<Configuration>
+  <Remove All="FALSE">
+    <Product ID="ProjectProRetail" >
+      <Language ID="en-us" />
+    </Product>
+  </Remove>
+<Logging Level="Standard" Path="%temp%" />   
+<Display Level="None" SuppressModal="yes" AcceptEULA="TRUE"/>
+<Property Name="FORCEAPPSHUTDOWN" Value="TRUE"/>
+</Configuration>

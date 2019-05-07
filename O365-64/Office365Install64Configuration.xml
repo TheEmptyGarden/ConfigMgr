@@ -1,0 +1,20 @@
+<Configuration ID="089467a6-0fac-41d1-b1c3-48a07f7f35ee" Host="cm"> 
+  <Add OfficeClientEdition="64" Channel="Monthly" OfficeMgmtCOM="TRUE" ForceUpgrade="TRUE"> 
+    <Product ID="O365ProPlusRetail"> 
+      <Language ID="en-us" /> 
+      <ExcludeApp ID="Groove" />
+    </Product> 
+  </Add> 
+  <Property Name="SharedComputerLicensing" Value="0" /> 
+  <Property Name="PinIconsToTaskbar" Value="TRUE" /> 
+  <Property Name="SCLCacheOverride" Value="0" /> 
+  <RemoveMSI All="TRUE" />
+  <AppSettings> 
+    <Setup Name="Company" Value="Lifetouch" /> 
+  </AppSettings>
+  <Updates Enabled="TRUE" />
+  <Logging Level="Standard" Path="C:\Windows\Temp\Office365ProPlusRetailInstall.log" />  
+  <Display Level="None" AcceptEULA="TRUE"/>  
+  <Property Name="FORCEAPPSHUTDOWN" Value="TRUE"/> 
+  <Property Name="AUTOACTIVATE" Value="1"/> 
+</Configuration>

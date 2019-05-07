@@ -1,0 +1,20 @@
+<Configuration ID="a3cb0ee2-4f49-4179-86f3-d25c47d66575" Host="cm">
+  <Add OfficeClientEdition="64" Channel="Monthly" OfficeMgmtCOM="TRUE" ForceUpgrade="TRUE"> 
+    <Product ID="ProjectProRetail"> 
+      <Language ID="en-us" /> 
+      <ExcludeApp ID="Groove" />
+    </Product> 
+  </Add> 
+  <Property Name="SharedComputerLicensing" Value="0" /> 
+  <Property Name="PinIconsToTaskbar" Value="TRUE" /> 
+  <Property Name="SCLCacheOverride" Value="0" /> 
+  <RemoveMSI All="TRUE" /> 
+  <AppSettings> 
+    <Setup Name="Company" Value="Lifetouch" /> 
+  </AppSettings>
+  <Updates Enabled="TRUE" />
+  <Logging Level="Standard" Path="C:\Windows\Temp\O365ProjectProRetailInstall.log" />  
+  <Display Level="None" AcceptEULA="TRUE"/> 
+  <Property Name="FORCEAPPSHUTDOWN" Value="TRUE"/> 
+  <Property Name="AUTOACTIVATE" Value="1"/> 
+</Configuration>

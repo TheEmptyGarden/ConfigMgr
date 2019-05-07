@@ -1,0 +1,28 @@
+<Configuration> 
+  <Add OfficeClientEdition="32" Channel="Monthly" OfficeMgmtCOM="TRUE" ForceUpgrade="TRUE"> 
+    <Product ID="O365ProPlusRetail"> 
+      <Language ID="en-us" /> 
+      <ExcludeApp ID="Groove" />
+      <ExcludeApp ID="OneNote" /> 
+      <ExcludeApp ID="PowerPoint" /> 
+      <ExcludeApp ID="Access" /> 
+      <ExcludeApp ID="Excel" /> 
+      <ExcludeApp ID="OneDrive" /> 
+      <ExcludeApp ID="Outlook" /> 
+      <ExcludeApp ID="Publisher" /> 
+      <ExcludeApp ID="Word" />
+    </Product> 
+  </Add> 
+  <Property Name="SharedComputerLicensing" Value="0" /> 
+  <Property Name="PinIconsToTaskbar" Value="TRUE" /> 
+  <Property Name="SCLCacheOverride" Value="0" /> 
+  <RemoveMSI All="TRUE" /> 
+  <AppSettings> 
+    <Setup Name="Company" Value="Lifetouch" /> 
+  </AppSettings>
+  <Updates Enabled="TRUE" />
+  <Logging Level="Standard" Path="C:\Windows\Temp\Skype365Install32.log" />  
+  <Display Level="None" AcceptEULA="TRUE"/> 
+  <Property Name="FORCEAPPSHUTDOWN" Value="TRUE"/> 
+  <Property Name="AUTOACTIVATE" Value="1"/> 
+</Configuration>

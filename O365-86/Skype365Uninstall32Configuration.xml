@@ -1,0 +1,18 @@
+<Configuration>
+  <Remove All="FALSE">
+    <Product ID="Office365ProPlusRetail" >
+      <Language ID="en-us" />
+      <ExcludeApp ID="OneNote" /> 
+      <ExcludeApp ID="PowerPoint" /> 
+      <ExcludeApp ID="Access" /> 
+      <ExcludeApp ID="Excel" /> 
+      <ExcludeApp ID="OneDrive" /> 
+      <ExcludeApp ID="Outlook" /> 
+      <ExcludeApp ID="Publisher" /> 
+      <ExcludeApp ID="Word" />
+    </Product>
+  </Remove>
+<Logging Level="Standard" Path="C:\Windows\Temp\Skype365Uninstall32.log" />  
+<Display Level="None" SuppressModal="yes" AcceptEULA="TRUE"/>
+<Property Name="FORCEAPPSHUTDOWN" Value="TRUE"/>
+</Configuration>

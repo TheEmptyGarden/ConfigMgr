@@ -1,0 +1,10 @@
+<Configuration>
+  <Remove All="FALSE">
+    <Product ID="VisioProRetail" >
+      <Language ID="en-us" />
+    </Product>
+  </Remove>
+<Logging Level="Standard" Path="C:\Windows\Temp\VisioProRetail32Uninstall.log" />  
+<Display Level="None" SuppressModal="yes" AcceptEULA="TRUE"/>
+<Property Name="FORCEAPPSHUTDOWN" Value="TRUE"/>
+</Configuration>
